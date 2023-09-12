@@ -4,7 +4,7 @@ Print your Turtle creations
 
 ## usage
 
-Write a turtle script in .tpy in scripts
+Write a turtle script with a .tpy extension in scripts
 
 Run the program with `$ make` or `$ python3 ./src/main.py`
 
