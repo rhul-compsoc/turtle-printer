@@ -1,17 +1,10 @@
 from errors import UserRuntimeError, UserSyntaxError
-
-# Exclude all default globals from the sandbox
-disallowed = globals().copy()
-
 # Import allowed modules
 import math
 from turtle import *
 
-# Remove disallowed globals and 'disallowed' object created earlier
-allowed_globals = {k: v for k, v in globals().items() if k not in disallowed and k != "disallowed"}
-
-# Define a set of allowed builtin functions that the user can access inside the sandbox
-allowed_builtins = {
+# Define a set of allowed functions that the user can access inside the sandbox
+allowed_locals = {
     abs,
     aiter,
     all,
@@ -35,6 +28,7 @@ allowed_builtins = {
     len,
     list,
     map,
+    math,
     max,
     min,
     next,
@@ -65,11 +59,12 @@ def run_turtle(code, file):
         raise UserSyntaxError(e.lineno, e.offset, e.text, e.msg) from e
 
     # Restrict environment that the code runs in
-    allowed_globals["__builtins__"] = None
-    locals = {x.__name__: x for x in allowed_builtins}
+    allowed_globals = {"__builtins__": None}
+    locals = {x.__name__: x for x in allowed_locals}
 
-    # Reset the turtle instance
-    reset()
+    # Create a new turtle instance and make it accessible to the sandbox
+    turtle = Turtle()
+    locals["turtle"] = turtle
 
     # Run the turtle code
     try:
