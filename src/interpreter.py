@@ -1,14 +1,18 @@
 from errors import UserRuntimeError, UserSyntaxError
 
+
 # Exclude all default globals from the sandbox
 disallowed = globals().copy()
+
 
 # Import allowed modules
 import math
 from turtle import *
 
+
 # Remove disallowed globals and 'disallowed' object created earlier
 allowed_globals = {k: v for k, v in globals().items() if k not in disallowed and k != "disallowed"}
+
 
 # Define a set of allowed builtin functions that the user can access inside the sandbox
 allowed_builtins = {
@@ -56,6 +60,7 @@ allowed_builtins = {
     zip
 }
 
+
 # run_turtle runs the given code and exports the resulting turtle image to the given file
 def run_turtle(code, file):
     # Compile the turtle code
@@ -81,7 +86,13 @@ def run_turtle(code, file):
     ts = getscreen()
     ts.getcanvas().postscript(file=file)
 
-# Open file containing code
-with open("test.txt") as file:
-    code = file.read()
-    run_turtle(code, "result.ps")
+
+# Run the program
+def interp(file="test.txt"):
+    # Open file containing code
+    with open(file) as file:
+        code = file.read()
+        try:
+            run_turtle(code, "result.ps")
+        except UserSyntaxError as e:
+            print(e)
