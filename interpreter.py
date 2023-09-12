@@ -51,7 +51,7 @@ allowed_locals = {
 }
 
 # run_turtle runs the given code and exports the resulting turtle image to the given file
-def run_turtle(code, file):
+def run_turtle(code, canvas):
     # Compile the turtle code
     try:
         compiled = compile(code, "turtle", "exec")
@@ -63,7 +63,8 @@ def run_turtle(code, file):
     locals = {x.__name__: x for x in allowed_locals}
 
     # Create a new turtle instance and make it accessible to the sandbox
-    turtle = Turtle()
+    canvas.delete("all")
+    turtle = RawTurtle(canvas)
     locals["turtle"] = turtle
 
     # Run the turtle code
@@ -71,12 +72,3 @@ def run_turtle(code, file):
         exec(compiled, allowed_globals, locals)
     except Exception as e:
         raise UserRuntimeError(e) from e
-
-    # Get the resulting image
-    ts = getscreen()
-    ts.getcanvas().postscript(file=file)
-
-# Open file containing code
-with open("test.txt") as file:
-    code = file.read()
-    run_turtle(code, "result.ps")
