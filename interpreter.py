@@ -1,3 +1,5 @@
+from errors import UserRuntimeError, UserSyntaxError
+
 # Exclude all default globals from the sandbox
 disallowed = globals().copy()
 
@@ -59,9 +61,8 @@ def run_turtle(code, file):
     # Compile the turtle code
     try:
         compiled = compile(code, "turtle", "exec")
-    except SyntaxError:
-        print("User code syntax error")
-        return
+    except SyntaxError as e:
+        raise UserSyntaxError(e.lineno, e.offset, e.text, e.msg) from e
 
     # Restrict environment that the code runs in
     allowed_globals["__builtins__"] = None
@@ -80,4 +81,7 @@ def run_turtle(code, file):
 # Open file containing code
 with open("test.txt") as file:
     code = file.read()
-    run_turtle(code, "result.ps")
+    try:
+        run_turtle(code, "result.ps")
+    except UserSyntaxError as e:
+        print(e)
