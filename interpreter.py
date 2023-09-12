@@ -77,7 +77,10 @@ def run_turtle(code, file):
     reset()
 
     # Run the turtle code
-    exec(compiled, allowed_globals, locals)
+    try:
+        exec(compiled, allowed_globals, locals)
+    except Exception as e:
+        raise UserRuntimeError(e) from e
 
     # Get the resulting image
     ts = getscreen()
