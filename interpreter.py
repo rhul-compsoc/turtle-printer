@@ -19,7 +19,7 @@ def run_turtle(code, file):
 
     # Restrict environment that the code runs in
     allowed_globals["__builtins__"] = None
-    locals = {"print": print}
+    locals = {"print": print, "range": range}
 
     # Reset the turtle instance
     reset()
