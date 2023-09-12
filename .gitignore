@@ -1,2 +1,3 @@
 *.txt
 *.ps
+__pycache__/

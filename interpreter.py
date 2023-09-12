@@ -72,7 +72,10 @@ def run_turtle(code, file):
     reset()
 
     # Run the turtle code
-    exec(compiled, allowed_globals, locals)
+    try:
+        exec(compiled, allowed_globals, locals)
+    except Exception as e:
+        raise UserRuntimeError(e) from e
 
     # Get the resulting image
     ts = getscreen()
@@ -81,7 +84,4 @@ def run_turtle(code, file):
 # Open file containing code
 with open("test.txt") as file:
     code = file.read()
-    try:
-        run_turtle(code, "result.ps")
-    except UserSyntaxError as e:
-        print(e)
+    run_turtle(code, "result.ps")
