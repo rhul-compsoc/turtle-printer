@@ -29,12 +29,36 @@ help_var = StringVar(value=help[help_page])
 help_label = Label(help_frame, textvariable=help_var, justify=LEFT, wraplength=550)
 help_label.grid(column=0, row=0, sticky="n")
 
+help_buttons = Frame(help_frame)
+help_buttons.grid(column=0, row=1, sticky="news", pady=20)
+
+page_number_var = StringVar()
+page_number = Label(help_buttons, textvariable=page_number_var)
+page_number.grid(column=1, row=0, padx=70)
+
+# update_page_number updates the page number display
+def update_page_number():
+    global help_page
+    page_number_var.set(f"{help_page + 1}/{len(help)}")
+    
+    # Update the button states
+    if help_page == len(help) - 1:
+        next_button.config(state=DISABLED)
+    else:
+        next_button.config(state=NORMAL)
+    
+    if help_page == 0:
+        prev_button.config(state=DISABLED)
+    else:
+        prev_button.config(state=NORMAL)
+
 # next_page moves the help window a page forward
 def next_page():
     global help_page
     if help_page < len(help) - 1:
         help_page += 1
         help_var.set(help[help_page])
+        update_page_number()
 
 # prev_page moves the help window back a page
 def prev_page():
@@ -42,20 +66,16 @@ def prev_page():
     if help_page > 0:
         help_page -= 1
         help_var.set(help[help_page])
-        if help_page == 0:
-            pass
+        update_page_number()
 
-help_buttons = Frame(help_frame)
-help_buttons.grid(column=0, row=1, sticky="news", pady=20)
 
 next_button = Button(help_buttons, text="Next", command=next_page)  
 next_button.grid(column=2, row=0)
 
 prev_button = Button(help_buttons, text="Prev", command=prev_page)
 prev_button.grid(column=0, row=0)
+update_page_number()
 
-page_number = Label(help_buttons, text=f"{help_page + 1}/{len(help)}")
-page_number.grid(column=1, row=0, padx=70)
 
 # Make a frame to display user errors in
 error_frame = Frame(root)
@@ -110,7 +130,7 @@ def run_code():
 
 # Add a button menu for turtle code
 button_menu = Frame(root)
-button_menu.grid(column=1, row=1)
-run_btn = Button(button_menu, text=">> Run Code >>", command=run_code).grid(column=0, row=0)
+button_menu.grid(column=1, row=1, sticky="s")
+Button(button_menu, text=">> Run Code >>", command=run_code).grid(column=0, row=0, sticky="s")
 
 root.mainloop()
