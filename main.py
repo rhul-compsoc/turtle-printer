@@ -1,8 +1,10 @@
 from tkinter import *
 from tkinter.ttk import *
 from chlorophyll import CodeView
+from PIL import Image
 import pygments.lexers
 import traceback
+import io
 from interpreter import run_turtle
 from help import *
 
@@ -132,5 +134,15 @@ def run_code():
 button_menu = Frame(root)
 button_menu.grid(column=1, row=1, sticky="s")
 Button(button_menu, text=">> Run Code >>", command=run_code).grid(column=0, row=0, sticky="s")
+
+# save_image will export the current canvas as a png into the /out directory
+def save_image():
+    # Export canvas to postscript
+    ps = canvas.postscript()
+    # Convert postscript to png
+    img = Image.open(io.BytesIO(ps.encode("utf-8")))
+    img.save("out/turtle.png")
+
+Button(button_menu, text="Save Image", command=save_image).grid(column=0, row=1, pady=40)
 
 root.mainloop()
