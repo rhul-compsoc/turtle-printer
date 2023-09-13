@@ -4,6 +4,7 @@ from chlorophyll import CodeView
 import pygments.lexers
 import traceback
 from interpreter import run_turtle
+from help import *
 
 # Create root window
 root = Tk()
@@ -18,7 +19,43 @@ editor = CodeView(root, lexer=pygments.lexers.PythonLexer, color_scheme="monokai
 editor.grid(column=0, row=0, rowspan=3, sticky="news")
 
 # Add a text widget for help
-Label(root, text="lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet", justify=LEFT, wraplength=500).grid(column=1, row=0)
+help_frame = Frame(root)
+help_frame.grid(column=1, row=0)
+help_frame.columnconfigure(0, weight=1)
+help_frame.rowconfigure((0, 1), weight=1)
+
+help_page = 0
+help_var = StringVar(value=help[help_page])
+help_label = Label(help_frame, textvariable=help_var, justify=LEFT, wraplength=550)
+help_label.grid(column=0, row=0, sticky="n")
+
+# next_page moves the help window a page forward
+def next_page():
+    global help_page
+    if help_page < len(help) - 1:
+        help_page += 1
+        help_var.set(help[help_page])
+
+# prev_page moves the help window back a page
+def prev_page():
+    global help_page
+    if help_page > 0:
+        help_page -= 1
+        help_var.set(help[help_page])
+        if help_page == 0:
+            pass
+
+help_buttons = Frame(help_frame)
+help_buttons.grid(column=0, row=1, sticky="news", pady=20)
+
+next_button = Button(help_buttons, text="Next", command=next_page)  
+next_button.grid(column=2, row=0)
+
+prev_button = Button(help_buttons, text="Prev", command=prev_page)
+prev_button.grid(column=0, row=0)
+
+page_number = Label(help_buttons, text=f"{help_page + 1}/{len(help)}")
+page_number.grid(column=1, row=0, padx=70)
 
 # Make a frame to display user errors in
 error_frame = Frame(root)
