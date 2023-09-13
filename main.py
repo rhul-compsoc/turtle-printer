@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter.ttk import *
 from chlorophyll import CodeView
-from PIL import Image
+from PIL import Image, ImageChops
 import pygments.lexers
 import traceback
 import io
@@ -135,12 +135,24 @@ button_menu = Frame(root)
 button_menu.grid(column=1, row=1, sticky="s")
 Button(button_menu, text=">> Run Code >>", command=run_code).grid(column=0, row=0, sticky="s")
 
+# trim removes excess space from a PIL image
+# by fraxel (StackOverflow)
+def trim(im):
+    bg = Image.new(im.mode, im.size, im.getpixel((0,0)))
+    diff = ImageChops.difference(im, bg)
+    diff = ImageChops.add(diff, diff, 2.0, -100)
+    bbox = diff.getbbox()
+    if bbox:
+        return im.crop(bbox)
+
 # save_image will export the current canvas as a png into the /out directory
 def save_image():
     # Export canvas to postscript
     ps = canvas.postscript()
     # Convert postscript to png
     img = Image.open(io.BytesIO(ps.encode("utf-8")))
+    # Trim excess space
+    img = trim(img)
     img.save("out/turtle.png")
 
 Button(button_menu, text="Save Image", command=save_image).grid(column=0, row=1, pady=40)
