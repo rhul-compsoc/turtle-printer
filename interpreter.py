@@ -1,4 +1,3 @@
-from errors import UserRuntimeError, UserSyntaxError
 # Import allowed modules
 import math
 from turtle import *
@@ -50,13 +49,10 @@ allowed_locals = {
     zip
 }
 
-# run_turtle runs the given code and exports the resulting turtle image to the given file
+# run_turtle runs the given code and displays the result on the given canvas
 def run_turtle(code, canvas):
     # Compile the turtle code
-    try:
-        compiled = compile(code, "turtle", "exec")
-    except SyntaxError as e:
-        raise UserSyntaxError(e.lineno, e.offset, e.text, e.msg) from e
+    compiled = compile(code, "turtle", "exec")
 
     # Restrict environment that the code runs in
     allowed_globals = {"__builtins__": None}
@@ -68,7 +64,4 @@ def run_turtle(code, canvas):
     locals["turtle"] = turtle
 
     # Run the turtle code
-    try:
-        exec(compiled, allowed_globals, locals)
-    except Exception as e:
-        raise UserRuntimeError(e) from e
+    exec(compiled, allowed_globals, locals)
