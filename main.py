@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter.ttk import *
 from chlorophyll import CodeView
 import pygments.lexers
+import traceback
 from interpreter import run_turtle
 
 # Create root window
@@ -47,12 +48,18 @@ canvas.grid(column=2, row=0, rowspan=3, sticky="news")
 def display_error(error):
         # Write error to text field
         error_label.config(state=NORMAL)
-        error_label.delete("1.0", END)
         error_label.insert("end", error)
         error_label.config(state=DISABLED)
 
+# clear_error will clear the current error from the text field
+def clear_error():
+    error_label.config(state=NORMAL)
+    error_label.delete("1.0", END)
+    error_label.config(state=DISABLED)
+
 # This will be run when the "Run Code" button is pressed
 def run_code():
+    clear_error()
     try:
         run_turtle(editor.get("1.0", "end-1c"), canvas)
     except SyntaxError as e:
@@ -60,7 +67,9 @@ def run_code():
         error = f"Your code contains a syntax error:\nError on line {e.lineno} col {e.offset}:\n{e.text}\n{' ' * (e.offset - 1)}^\n{e.msg}"
         display_error(error)
     except Exception as e:
-        pass
+        # Create and display the runtime error
+        error = f"Your code caused an error during execution:\n{''.join(traceback.format_exception(e)[-2:])}"
+        display_error(error)
 
 # Add a button menu for turtle code
 button_menu = Frame(root)
