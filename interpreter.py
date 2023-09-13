@@ -60,7 +60,12 @@ def run_turtle(code, canvas):
 
     # Create a new turtle instance and make it accessible to the sandbox
     canvas.delete("all")
-    turtle = RawTurtle(canvas)
+    turtle = RawTurtle(canvas, shape="turtle", visible=False)
+    # Move the turtle to roughly the center of the canvas
+    turtle.penup()
+    turtle.goto(0, -350)
+    turtle.pendown()
+    turtle.showturtle()
     locals["turtle"] = turtle
 
     # Run the turtle code
