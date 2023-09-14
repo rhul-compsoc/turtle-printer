@@ -120,7 +120,7 @@ def clear_error():
 def run_code():
     clear_error()
     try:
-        run_turtle(editor.get("1.0", "end-1c"), canvas)
+        run_turtle(editor.get("1.0", "end-1c"), canvas, display_error)
     except SyntaxError as e:
         # Create and display a more readable syntax error
         error = f"Your code contains a syntax error:\nError on line {e.lineno} col {e.offset}:\n{e.text}\n{' ' * (e.offset - 1)}^\n{e.msg}"

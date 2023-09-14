@@ -48,7 +48,8 @@ allowed_globals = {
 }
 
 # run_turtle runs the given code and displays the result on the given canvas
-def run_turtle(code, canvas):
+# print_func specifies a function to use in place of print when running user code
+def run_turtle(code, canvas, print_func=print):
     # Compile the turtle code
     compiled = compile(code, "turtle", "exec")
 
@@ -64,6 +65,9 @@ def run_turtle(code, canvas):
     turtle.pendown()
     turtle.showturtle()
     globs["turtle"] = turtle
+    
+    # Give overridden print function
+    globs["__builtins__"]["print"] = print_func
 
     # Run the turtle code
     exec(compiled, globs, {})
