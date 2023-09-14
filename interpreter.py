@@ -53,8 +53,7 @@ def run_turtle(code, canvas):
     compiled = compile(code, "turtle", "exec")
 
     # Restrict environment that the code runs in
-    globs = {"__builtins__": {x.__name__: x for x in allowed_globals}}
-    locals = {"math": math}
+    globs = {"__builtins__": {x.__name__: x for x in allowed_globals}, "math": math}
 
     # Create a new turtle instance and make it accessible to the sandbox
     canvas.delete("all")
@@ -64,7 +63,7 @@ def run_turtle(code, canvas):
     turtle.goto(0, -350)
     turtle.pendown()
     turtle.showturtle()
-    locals["turtle"] = turtle
+    globs["turtle"] = turtle
 
     # Run the turtle code
-    exec(compiled, globs, locals)
+    exec(compiled, globs, {})
