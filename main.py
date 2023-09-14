@@ -9,6 +9,8 @@ import socket
 from interpreter import run_turtle
 from help import *
 
+SERVER_ADDRESS = ("localhost", 4444)
+
 # Create root window
 root = Tk()
 root.title("Turtle Printer")
@@ -182,14 +184,18 @@ def send_image(img):
     with io.BytesIO() as img_bytes:
         img.save(img_bytes, format="PNG")
         img_byte_array = img_bytes.getvalue()
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-            # Connect to image server and send image length
-            sock.connect(("localhost", 4444))
-            sock.sendall(len(img_byte_array).to_bytes(4, "big"))
-            # Now send whole image
-            sock.sendall(img_byte_array)
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+                # Connect to image server and send image length
+                sock.connect(SERVER_ADDRESS)
+                sock.sendall(len(img_byte_array).to_bytes(4, "big"))
+                # Now send whole image
+                sock.sendall(img_byte_array)
+        except socket.error as error:
+            display_error(f"Error connecting to {SERVER_ADDRESS[0]}:{SERVER_ADDRESS[1]}\n{error}")
 
 save_button = Button(button_menu, text="Print Image", command=save_image)
 save_button.grid(column=0, row=1, pady=40)
+save_button.config(state=DISABLED)
 
 root.mainloop()
