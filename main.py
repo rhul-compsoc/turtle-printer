@@ -5,6 +5,7 @@ from PIL import Image, ImageChops
 import pygments.lexers
 import traceback
 import io
+import socket
 from interpreter import run_turtle
 from help import *
 
@@ -164,7 +165,7 @@ def trim(im):
     if bbox:
         return im.crop(bbox)
 
-# save_image will export the current canvas as a png into the /out directory
+# save_image will export the current canvas as a png and send it to be printed
 def save_image():
     # Export canvas to postscript
     ps = canvas.postscript()
@@ -172,9 +173,23 @@ def save_image():
     img = Image.open(io.BytesIO(ps.encode("utf-8")))
     # Trim excess space
     img = trim(img)
-    img.save("out/turtle.png")
+    # Send image to the server
+    send_image(img)
 
-save_button = Button(button_menu, text="Save Image", command=save_image)
+# send_image sends the given image to the image server
+def send_image(img):
+    # Convert image to byte array
+    with io.BytesIO() as img_bytes:
+        img.save(img_bytes, format="PNG")
+        img_byte_array = img_bytes.getvalue()
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            # Connect to image server and send image length
+            sock.connect(("localhost", 4444))
+            sock.sendall(len(img_byte_array).to_bytes(4, "big"))
+            # Now send whole image
+            sock.sendall(img_byte_array)
+
+save_button = Button(button_menu, text="Print Image", command=save_image)
 save_button.grid(column=0, row=1, pady=40)
 
 root.mainloop()

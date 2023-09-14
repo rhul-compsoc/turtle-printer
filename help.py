@@ -39,6 +39,8 @@ turtle.pendown()
 turtle.begin_fill()
 turtle.end_fill()
 
-See what you can come up with by combining these commands. You can continue this help turotial for some more advanced Python concepts if you wish.
+See what you can come up with by combining these commands. Once you've made something you're proud of, hit "Print Image" so see it printed on a receipt.
+
+You can continue this help turotial for some more advanced Python concepts if you wish.
 """
 ]
