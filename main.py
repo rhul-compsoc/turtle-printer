@@ -97,18 +97,29 @@ v.grid(column=1, row=0, sticky="ns")
 error_label.config(yscrollcommand=v.set)
 
 error_label.config(state=DISABLED)
-error_label.config(fg="red")
+error_label.tag_config("error", foreground="red")
 
 # Make a canvas to display the turtle on
 canvas = Canvas(root, width=750)
 canvas.grid(column=2, row=0, rowspan=3, sticky="news")
 
+# display_text writes text to the error text field
+def display_text(text):
+    error_label.config(state=NORMAL)
+    error_label.insert("end", text)
+    error_label.config(state=DISABLED)
+
+# print_text prints text to the error field
+def print_text(text):
+    display_text(text + "\n")
+
 # display_error writes and error to the error text field
 def display_error(error):
-        # Write error to text field
-        error_label.config(state=NORMAL)
-        error_label.insert("end", error)
-        error_label.config(state=DISABLED)
+        # Write error to text field and add color tag
+        start = error_label.index("end-1c")
+        display_text(error)
+        end = error_label.index("end-1c")
+        error_label.tag_add("error", start, end)
 
 # clear_error will clear the current error from the text field
 def clear_error():
@@ -120,7 +131,7 @@ def clear_error():
 def run_code():
     clear_error()
     try:
-        run_turtle(editor.get("1.0", "end-1c"), canvas, display_error)
+        run_turtle(editor.get("1.0", "end-1c"), canvas, print_text)
     except SyntaxError as e:
         # Create and display a more readable syntax error
         error = f"Your code contains a syntax error:\nError on line {e.lineno} col {e.offset}:\n{e.text}\n{' ' * (e.offset - 1)}^\n{e.msg}"
