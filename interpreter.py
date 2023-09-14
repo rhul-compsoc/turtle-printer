@@ -3,7 +3,7 @@ import math
 from turtle import *
 
 # Define a set of allowed functions that the user can access inside the sandbox
-allowed_locals = {
+allowed_globals = {
     abs,
     aiter,
     all,
@@ -27,14 +27,12 @@ allowed_locals = {
     len,
     list,
     map,
-    math,
     max,
     min,
     next,
     oct,
     ord,
     pow,
-    print,
     range,
     repr,
     reversed,
@@ -55,8 +53,8 @@ def run_turtle(code, canvas):
     compiled = compile(code, "turtle", "exec")
 
     # Restrict environment that the code runs in
-    allowed_globals = {"__builtins__": None}
-    locals = {x.__name__: x for x in allowed_locals}
+    globs = {"__builtins__": {x.__name__: x for x in allowed_globals}}
+    locals = {"math": math}
 
     # Create a new turtle instance and make it accessible to the sandbox
     canvas.delete("all")
@@ -69,4 +67,4 @@ def run_turtle(code, canvas):
     locals["turtle"] = turtle
 
     # Run the turtle code
-    exec(compiled, allowed_globals, locals)
+    exec(compiled, globs, locals)
