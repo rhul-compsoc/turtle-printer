@@ -33,8 +33,11 @@ turtle.backward(<distance>)
 turtle.right(<angle>)
 turtle.left(<angle>)
 turtle.circle(<radius>)
+turtle.width(<thickness>)
 turtle.penup()
 turtle.pendown()
+turtle.begin_fill()
+turtle.end_fill()
 
 See what you can come up with by combining these commands. You can continue this help turotial for some more advanced Python concepts if you wish.
 """

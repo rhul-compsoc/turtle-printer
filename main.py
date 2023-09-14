@@ -78,7 +78,6 @@ prev_button = Button(help_buttons, text="Prev", command=prev_page)
 prev_button.grid(column=0, row=0)
 update_page_number()
 
-
 # Make a frame to display user errors in
 error_frame = Frame(root)
 error_frame.grid(column=1, row=2, sticky="s")
@@ -134,7 +133,7 @@ def run_code():
         # Disable buttons during execution
         run_button.config(state=DISABLED)
         save_button.config(state=DISABLED)
-        
+
         run_turtle(editor.get("1.0", "end-1c"), canvas, print_text)
     except SyntaxError as e:
         # Create and display a more readable syntax error

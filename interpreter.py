@@ -63,6 +63,7 @@ def run_turtle(code, canvas, print_func=print):
     turtle.penup()
     turtle.goto(0, -350)
     turtle.pendown()
+    turtle.width(4)
     turtle.showturtle()
     globs["turtle"] = turtle
     
