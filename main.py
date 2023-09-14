@@ -131,6 +131,10 @@ def clear_error():
 def run_code():
     clear_error()
     try:
+        # Disable buttons during execution
+        run_button.config(state=DISABLED)
+        save_button.config(state=DISABLED)
+        
         run_turtle(editor.get("1.0", "end-1c"), canvas, print_text)
     except SyntaxError as e:
         # Create and display a more readable syntax error
@@ -140,11 +144,16 @@ def run_code():
         # Create and display the runtime error
         error = f"Your code caused an error during execution:\n{''.join(traceback.format_exception(e)[-2:])}"
         display_error(error)
+    finally:
+        # Re-enable buttons
+        run_button.config(state=NORMAL)
+        save_button.config(state=NORMAL)
 
 # Add a button menu for turtle code
 button_menu = Frame(root)
 button_menu.grid(column=1, row=1, sticky="s")
-Button(button_menu, text=">> Run Code >>", command=run_code).grid(column=0, row=0, sticky="s")
+run_button = Button(button_menu, text=">> Run Code >>", command=run_code)
+run_button.grid(column=0, row=0, sticky="s")
 
 # trim removes excess space from a PIL image
 # by fraxel (StackOverflow)
@@ -166,6 +175,7 @@ def save_image():
     img = trim(img)
     img.save("out/turtle.png")
 
-Button(button_menu, text="Save Image", command=save_image).grid(column=0, row=1, pady=40)
+save_button = Button(button_menu, text="Save Image", command=save_image)
+save_button.grid(column=0, row=1, pady=40)
 
 root.mainloop()
