@@ -111,7 +111,7 @@ def display_text(text):
 
 # print_text prints text to the error field
 def print_text(text):
-    display_text(text + "\n")
+    display_text(str(text) + "\n")
 
 # display_error writes and error to the error text field
 def display_error(error):
