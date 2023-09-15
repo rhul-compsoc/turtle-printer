@@ -1,4 +1,4 @@
 *.txt
-*.ps
+.env
 __pycache__/
 out/

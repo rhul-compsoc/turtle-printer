@@ -2,14 +2,26 @@ from tkinter import *
 from tkinter.ttk import *
 from chlorophyll import CodeView
 from PIL import Image, ImageChops
+from dotenv import load_dotenv
 import pygments.lexers
 import traceback
 import io
 import socket
+import os
+import sys
 from interpreter import run_turtle
 from help import *
 
-SERVER_ADDRESS = ("localhost", 4444)
+load_dotenv()
+
+try:
+    SERVER_ADDRESS = (os.environ["TURTLE_ADDRESS"], int(os.environ["TURTLE_PORT"]))
+except KeyError as e:
+    print(f"Missing config value {e}")
+    sys.exit(1)
+except ValueError:
+    print('Config value TURTLE_PORT must be an integer')
+    sys.exit(1)
 
 # Create root window
 root = Tk()
