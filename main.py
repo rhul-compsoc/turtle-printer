@@ -181,6 +181,8 @@ def trim(im):
 
 # save_image will export the current canvas as a png and send it to be printed
 def save_image():
+    # Disable button
+    save_button.config(state=DISABLED)
     # Export canvas to postscript
     ps = canvas.postscript()
     # Convert postscript to png
