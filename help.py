@@ -1,5 +1,5 @@
 help = [
-"""Welcome to the turtle printer game! This is an easy way to get into some basic coding, or just to have a bit of fun.
+"""Welcome to the Turtle art game! This is an easy way to get into some basic coding, or just to have a bit of fun.
 
 In the box on the left, you can write code. You can then use the "Run Code" button to see the results of your code on the right hand side.
 
@@ -40,7 +40,7 @@ turtle.pendown()
 turtle.begin_fill()
 turtle.end_fill()
 
-See what you can come up with by combining these commands. Once you've made something you're proud of, hit "Print Image" to see it printed on a receipt.
+See what you can come up with by combining these commands. Once you've made something you're proud of, hit "Submit Image" to submit it to our Discord gallery!
 
 You can continue this help tutorial for some more advanced Python concepts if you wish.
 """,

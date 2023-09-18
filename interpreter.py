@@ -72,3 +72,6 @@ def run_turtle(code, canvas, print_func=print):
 
     # Run the turtle code
     exec(compiled, globs, {})
+    
+    # Hide the turtle
+    turtle.hideturtle()

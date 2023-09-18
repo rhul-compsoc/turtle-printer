@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter.ttk import *
 from chlorophyll import CodeView
-from PIL import Image, ImageChops
+from PIL import Image, ImageChops, ImageOps
 from dotenv import load_dotenv
 import pygments.lexers
 import traceback
@@ -167,7 +167,7 @@ def run_code():
 button_menu = Frame(root)
 button_menu.grid(column=1, row=1, sticky="s")
 run_button = Button(button_menu, text=">> Run Code >>", command=run_code)
-run_button.grid(column=0, row=0, sticky="s")
+run_button.grid(column=0, row=0, sticky="s", pady=40)
 
 # trim removes excess space from a PIL image
 # by fraxel (StackOverflow)
@@ -189,11 +189,13 @@ def save_image():
     img = Image.open(io.BytesIO(ps.encode("utf-8")))
     # Trim excess space
     img = trim(img)
+    # Add predefined border
+    img = ImageOps.expand(img, border=50, fill="white")
     # Send image to the server
-    send_image(img)
+    send_image(img, author_name.get())
 
-# send_image sends the given image to the image server
-def send_image(img):
+# send_image sends the given image to the image server along with the name of its author
+def send_image(img, author):
     # Convert image to byte array
     with io.BytesIO() as img_bytes:
         img.save(img_bytes, format="PNG")
@@ -205,11 +207,19 @@ def send_image(img):
                 sock.sendall(len(img_byte_array).to_bytes(4, "big"))
                 # Now send whole image
                 sock.sendall(img_byte_array)
+                # Now send author name
+                author_bytes = bytes(author, "utf-8")
+                sock.sendall(len(author_bytes).to_bytes(4, "big"))
+                sock.sendall(author_bytes)
         except socket.error as error:
             display_error(f"Error connecting to {SERVER_ADDRESS[0]}:{SERVER_ADDRESS[1]}\n{error}")
 
-save_button = Button(button_menu, text="Print Image", command=save_image)
-save_button.grid(column=0, row=1, pady=40)
+Label(button_menu, text="Enter your name").grid(column=0, row=1)
+author_name = Entry(button_menu)
+author_name.grid(column=0, row=2)
+
+save_button = Button(button_menu, text="Submit Image", command=save_image)
+save_button.grid(column=0, row=3, pady=5)
 save_button.config(state=DISABLED)
 
 root.mainloop()
